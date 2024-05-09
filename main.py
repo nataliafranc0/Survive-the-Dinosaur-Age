@@ -1,7 +1,7 @@
 import pygame
 from dinosaur import Dinosaur
 from boulder import Boulder
-
+from cloud import Cloud
 
 print("Welcome to Survive the Dinosaur Age!")
 
@@ -15,6 +15,10 @@ welcome_font = pygame.font.SysFont('Comfortaa', 40)
 size = (800, 600)
 screen = pygame.display.set_mode(size)
 dino_start_x = 580
+boulder_start_x = 750
+boulder_y = 282
+cloud_start_x = 850
+cloud_y = 50
 
 
 r = 23
@@ -24,13 +28,17 @@ g = 132
 # boulder = pygame.image.load("boulder-removebg-preview.png")
 
 first_background = pygame.image.load("daytime_background.jfif")
-first_background = pygame.transform.scale(first_background, (1280, 720))
+first_background = pygame.transform.scale(first_background, (800, 600))
+#IT WORKED!!!!!!!!!
 
 second_background = pygame.image.load("Desert_background.jfif")
 final_background = pygame.image.load("fire_background.jfif")
 
 dino = Dinosaur(dino_start_x, 0)
-boulder = Boulder(900, 580)
+boulder = Boulder(750, 200)
+cloud = Cloud(850, 50)
+
+
 #introduction window code
 welcome = my_font.render("Welcome to Survive the Dinosaur Age!", True, (255, 255, 255))
 instructions = my_font.render("During this game, you will need to dodge obstacles and complete each Dinosaur period to survive!", True, (255, 255, 255))
@@ -44,6 +52,8 @@ intro_screen_showing = True
 #boolean variables to decide when to switch backgrounds
 show_first_background = False
 end_first_background = False
+show_dino = False
+show_boulder = False
 
 show_second_background = False
 end_second_background = False
@@ -59,7 +69,24 @@ clock = pygame.time.Clock()
 frame = 0
 while run:
     # --- Main event loop
-    # clock.tick(60)
+    clock.tick(60)
+    if frame % 1 == 0:
+        boulder_start_x = boulder_start_x - 5
+        boulder.move_boulder(boulder_start_x, boulder_y)
+
+    if boulder_start_x == -200:
+        boulder_start_x = 750
+        boulder.move_boulder(boulder_start_x, boulder_y)
+
+    if frame % 2 == 0:
+        cloud_start_x = cloud_start_x - 10
+        cloud.move_cloud(cloud_start_x, cloud_y)
+
+    if cloud_start_x == -200:
+        cloud_start_x = 700
+        cloud.move_cloud(cloud_start_x, cloud_y)
+
+
 
     for event in pygame.event.get():  # User did something
 
@@ -69,6 +96,10 @@ while run:
     if intro_screen_showing == True and event.type == pygame.MOUSEBUTTONUP:
             intro_screen_showing = False
             show_first_background = True
+
+    if show_first_background == True:
+        show_dino = True
+        show_boulder = True
 
         # if show_first_background == True:
         #
@@ -91,6 +122,9 @@ while run:
         pygame.display.update()
     if intro_screen_showing == False and show_first_background == True:
         screen.blit(first_background, (0, 0))
+        screen.blit(boulder.image, (boulder_start_x, boulder_y))
+        screen.blit(dino.image, (290, 325))
+        screen.blit(cloud.image, (cloud_start_x, cloud_y))
         pygame.display.update()
     frame += 1
 
