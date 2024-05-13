@@ -2,10 +2,13 @@ import pygame
 from dinosaur import Dinosaur
 from boulder import Boulder
 from cloud import Cloud
+from trex import Trex
+
 
 print("Welcome to Survive the Dinosaur Age!")
 
 # set up pygame modules
+
 pygame.init()
 pygame.font.init()
 my_font = pygame.font.SysFont('Arial', 20)
@@ -34,9 +37,20 @@ first_background = pygame.transform.scale(first_background, (800, 600))
 second_background = pygame.image.load("Desert_background.jfif")
 final_background = pygame.image.load("fire_background.jfif")
 
-dino = Dinosaur(dino_start_x, 0)
+dino_x_position = 290
+dino_y_position = 325
+dino = Dinosaur(dino_x_position, dino_y_position)
 boulder = Boulder(750, 200)
 cloud = Cloud(850, 50)
+trex = Trex(400, 325)
+
+# dino_rect = dino.rect(center=(dino_x_position, dino_y_position))
+
+y_gravity = 1
+jump_height = 20
+y_velocity = jump_height
+
+jumping = False
 
 
 #introduction window code
@@ -70,6 +84,11 @@ frame = 0
 while run:
     # --- Main event loop
     clock.tick(60)
+
+    # clock.tick(60)
+    # if frame % 2 == 0:
+    #     dino.switch_image()
+
     if frame % 1 == 0:
         boulder_start_x = boulder_start_x - 5
         boulder.move_boulder(boulder_start_x, boulder_y)
@@ -92,6 +111,20 @@ while run:
 
         if event.type == pygame.QUIT:  # If user clicked close
             run = False
+    keys_pressed = pygame.key.get_pressed()
+
+    if keys_pressed[pygame.K_SPACE]:
+        jumping = True
+
+
+    if jumping == True:
+        dino_y_position -= y_velocity
+        y_velocity -= y_gravity
+        if y_velocity < -jump_height:
+            jumping = False
+            y_velocity = jump_height
+        # dino_rect = dino.rect(center=(dino_x_position, dino_y_position))
+
 
     if intro_screen_showing == True and event.type == pygame.MOUSEBUTTONUP:
             intro_screen_showing = False
@@ -123,7 +156,8 @@ while run:
     if intro_screen_showing == False and show_first_background == True:
         screen.blit(first_background, (0, 0))
         screen.blit(boulder.image, (boulder_start_x, boulder_y))
-        screen.blit(dino.image, (290, 325))
+        screen.blit(dino.image, (dino_x_position, dino_y_position))
+        screen.blit(trex.image, trex.rect)
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         pygame.display.update()
     frame += 1
