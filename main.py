@@ -1,4 +1,5 @@
 import pygame
+import time
 from dinosaur import Dinosaur
 from boulder import Boulder
 from cloud import Cloud
@@ -14,14 +15,24 @@ pygame.font.init()
 my_font = pygame.font.SysFont('Arial', 20)
 welcome_font = pygame.font.SysFont('Comfortaa', 40)
 
+start_time = time.time()
+start_time = float(start_time)
+
+current_time = start_time
+time_end = False
+end = False
+total_time = 0
+
 # set up variables for the display
 size = (800, 600)
 screen = pygame.display.set_mode(size)
 dino_start_x = 580
 boulder_start_x = 750
 boulder_y = 282
-cloud_start_x = 850
+cloud_start_x = 1234
 cloud_y = 50
+trex_start_x = 923
+trex_start_y = 440
 
 
 r = 23
@@ -37,12 +48,15 @@ first_background = pygame.transform.scale(first_background, (800, 600))
 second_background = pygame.image.load("Desert_background.jfif")
 final_background = pygame.image.load("fire_background.jfif")
 
+
+#starting variable for position
 dino_x_position = 290
 dino_y_position = 325
 dino = Dinosaur(dino_x_position, dino_y_position)
 boulder = Boulder(750, 200)
 cloud = Cloud(850, 50)
-trex = Trex(400, 325)
+trex = Trex(850, 440)
+trex.rescale_image("trex.png")
 
 # dino_rect = dino.rect(center=(dino_x_position, dino_y_position))
 
@@ -62,6 +76,10 @@ how_to_win = my_font.render("Once you pass the Triassic, Jurassic, and Cretaceou
 good_luck = my_font.render("GOODLUCK!!!!!!!", True, (255, 255, 255))
 how_to_start_game = my_font.render("Click to begin", True, (255, 255, 255))
 intro_screen_showing = True
+
+
+#time display
+display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
 
 #boolean variables to decide when to switch backgrounds
 show_first_background = False
@@ -85,10 +103,7 @@ while run:
     # --- Main event loop
     clock.tick(60)
 
-    # clock.tick(60)
-    # if frame % 2 == 0:
-    #     dino.switch_image()
-
+#boulder moving code
     if frame % 1 == 0:
         boulder_start_x = boulder_start_x - 5
         boulder.move_boulder(boulder_start_x, boulder_y)
@@ -97,13 +112,31 @@ while run:
         boulder_start_x = 750
         boulder.move_boulder(boulder_start_x, boulder_y)
 
+
+#cloud moving code
     if frame % 2 == 0:
         cloud_start_x = cloud_start_x - 10
         cloud.move_cloud(cloud_start_x, cloud_y)
 
-    if cloud_start_x == -200:
+    if cloud_start_x <= -200:
         cloud_start_x = 700
         cloud.move_cloud(cloud_start_x, cloud_y)
+
+
+#trex moving code + keeping track if player hits dino
+
+    if frame % 1 == 0:
+        trex_start_x = trex_start_x - 9
+        trex.move_trex(trex_start_x, trex_start_y)
+
+    if trex_start_x <= -200:
+        trex_start_x = 850
+        trex.move_trex(trex_start_x, trex_start_y)
+
+#collision code to see if player hits trex!!!!!!!!!!!
+    if pygame.sprite.spritecollide(dino, trex, True):
+        end = True
+
 
 
 
@@ -117,6 +150,7 @@ while run:
         jumping = True
 
 
+#jumping code
     if jumping == True:
         dino_y_position -= y_velocity
         y_velocity -= y_gravity
@@ -126,6 +160,7 @@ while run:
         # dino_rect = dino.rect(center=(dino_x_position, dino_y_position))
 
 
+#bakcground code to decide on background
     if intro_screen_showing == True and event.type == pygame.MOUSEBUTTONUP:
             intro_screen_showing = False
             show_first_background = True
@@ -134,10 +169,25 @@ while run:
         show_dino = True
         show_boulder = True
 
-        # if show_first_background == True:
-        #
 
 
+# timer used to move bomb spontaneously
+    timer_ongoing = round(current_time - start_time, 2)
+
+# creating timer countdown
+    current_time = time.time()
+
+    if time_end == False:
+        for i in range(1):
+            current_time -= 1
+            total_time = round((start_time + 50) - current_time, 2)
+    display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
+
+
+    # when timer countdown ends, game is over condition
+    if total_time == 0:
+        end = True
+        time_end = True
 
 
 
@@ -153,13 +203,16 @@ while run:
         screen.blit(good_luck, (320, 500))
         screen.blit(how_to_start_game, (320, 560))
         pygame.display.update()
-    if intro_screen_showing == False and show_first_background == True:
+    if intro_screen_showing == False and show_first_background == True and end == False:
         screen.blit(first_background, (0, 0))
+        screen.blit(display_time , (0, 0))
         screen.blit(boulder.image, (boulder_start_x, boulder_y))
         screen.blit(dino.image, (dino_x_position, dino_y_position))
         screen.blit(trex.image, trex.rect)
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         pygame.display.update()
+    if end == True:
+        screen.fill((r, b, g))
     frame += 1
 
 
