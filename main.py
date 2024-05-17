@@ -31,7 +31,7 @@ boulder_start_x = 750
 boulder_y = 282
 cloud_start_x = 1234
 cloud_y = 50
-trex_start_x = 923
+trex_start_x = 1000
 trex_start_y = 440
 
 
@@ -58,11 +58,22 @@ cloud = Cloud(850, 50)
 trex = Trex(850, 440)
 trex.rescale_image("trex.png")
 
+# trex_center = trex.get_rect().center
+# scaled_image = pygame.transform.scale_by(trex, 2)
+# screen.blit(scaled_image, scaled_image.get_rect(center=trex))
+#
+# pygame.Rect.scale_by
+
+# rexy = pygame.sprite.Group(trex)
+
 # dino_rect = dino.rect(center=(dino_x_position, dino_y_position))
 
 y_gravity = 1
 jump_height = 20
 y_velocity = jump_height
+
+
+
 
 jumping = False
 
@@ -134,8 +145,10 @@ while run:
         trex.move_trex(trex_start_x, trex_start_y)
 
 #collision code to see if player hits trex!!!!!!!!!!!
-    if pygame.sprite.spritecollide(dino, trex, True):
+    if trex.rect.colliderect(dino.rect):
         end = True
+    # if pygame.sprite.spritecollide(dino, trex, True):
+    #     end = True
 
 
 
@@ -180,7 +193,7 @@ while run:
     if time_end == False:
         for i in range(1):
             current_time -= 1
-            total_time = round((start_time + 50) - current_time, 2)
+            total_time = round((start_time + 49) - current_time, 2)
     display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
 
 
@@ -208,6 +221,11 @@ while run:
         screen.blit(display_time , (0, 0))
         screen.blit(boulder.image, (boulder_start_x, boulder_y))
         screen.blit(dino.image, (dino_x_position, dino_y_position))
+
+        # drawing the outline of the rectangle
+        pygame.draw.rect(screen, (0, 0, 0), dino.rect, 2)
+        pygame.draw.rect(screen, (0, 0, 0), trex.rect, 2)
+
         screen.blit(trex.image, trex.rect)
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         pygame.display.update()
