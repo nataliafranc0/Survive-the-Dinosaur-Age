@@ -1,5 +1,6 @@
 import pygame
 import time
+import random
 from dinosaur import Dinosaur
 from boulder import Boulder
 from cloud import Cloud
@@ -50,13 +51,13 @@ final_background = pygame.image.load("fire_background.jfif")
 
 
 #starting variable for position
-dino_x_position = 290
-dino_y_position = 325
+dino_x_position = 100
+dino_y_position = 384
 dino = Dinosaur(dino_x_position, dino_y_position)
 boulder = Boulder(750, 200)
 cloud = Cloud(850, 50)
-trex = Trex(850, 440)
-trex.rescale_image("trex.png")
+trex = Trex(1000, 440)
+# trex.rescale_image("trex.png")
 
 # trex_center = trex.get_rect().center
 # scaled_image = pygame.transform.scale_by(trex, 2)
@@ -73,6 +74,12 @@ jump_height = 20
 y_velocity = jump_height
 
 
+#defining time vcariables
+first_ten_seconds_of_trex = 0
+second_ten_seconds_of_trex = 0
+third_ten_seconds_of_trex = 0
+fourth_ten_seconds_of_trex = 0
+fifth_ten_seconds_of_trex = 0
 
 
 jumping = False
@@ -150,6 +157,22 @@ while run:
     # if pygame.sprite.spritecollide(dino, trex, True):
     #     end = True
 
+    if 40.00 <= total_time <= 49.00:
+        first_ten_seconds_of_trex = random.randint(1, 8)
+
+    if 30.00 <= total_time <= 39.00:
+        second_ten_seconds_of_trex = random.randint(1, 9)
+
+    if 20.00 <= total_time <= 29.00:
+        third_ten_seconds_of_trex = random.randint(1, 9)
+
+    if 10.00 <= total_time <= 19.00:
+        fourth_ten_seconds_of_trex = random.randint(1, 9)
+
+    if 1.00 <= total_time <= 9.00:
+        fifth_ten_seconds_of_trex = random.randint(2, 8)
+
+
 
 
 
@@ -170,7 +193,7 @@ while run:
         if y_velocity < -jump_height:
             jumping = False
             y_velocity = jump_height
-        # dino_rect = dino.rect(center=(dino_x_position, dino_y_position))
+        dino.rect = pygame.Rect(dino.x, dino_y_position, dino.image_size[0], dino.image_size[1])
 
 
 #bakcground code to decide on background
@@ -220,13 +243,35 @@ while run:
         screen.blit(first_background, (0, 0))
         screen.blit(display_time , (0, 0))
         screen.blit(boulder.image, (boulder_start_x, boulder_y))
-        screen.blit(dino.image, (dino_x_position, dino_y_position))
+        screen.blit(dino.image, dino.rect)
 
         # drawing the outline of the rectangle
         pygame.draw.rect(screen, (0, 0, 0), dino.rect, 2)
         pygame.draw.rect(screen, (0, 0, 0), trex.rect, 2)
 
-        screen.blit(trex.image, trex.rect)
+
+        if first_ten_seconds_of_trex == total_time:
+            screen.blit(trex.image, trex.rect)
+
+
+        if second_ten_seconds_of_trex == total_time:
+            screen.blit(trex.image, trex.rect)
+
+
+        if third_ten_seconds_of_trex == total_time:
+            screen.blit(trex.image, trex.rect)
+
+
+        if fourth_ten_seconds_of_trex == total_time:
+            screen.blit(trex.image, trex.rect)
+
+
+        if fifth_ten_seconds_of_trex == total_time:
+            screen.blit(trex.image, trex.rect)
+
+
+
+        # screen.blit(trex.image, trex.rect)
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         pygame.display.update()
     if end == True:
