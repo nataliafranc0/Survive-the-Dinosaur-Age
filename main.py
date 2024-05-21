@@ -24,6 +24,13 @@ time_end = False
 end = False
 total_time = 0
 
+
+
+winning = False
+losing = False
+
+
+
 # set up variables for the display
 size = (800, 600)
 screen = pygame.display.set_mode(size)
@@ -81,6 +88,12 @@ third_ten_seconds_of_trex = 0
 fourth_ten_seconds_of_trex = 0
 fifth_ten_seconds_of_trex = 0
 
+first_chosen_time = 0
+second_chosen_time = 0
+third_chosen_time = 0
+fourth_chosen_time = 0
+fifth_chosen_time = 0
+
 
 jumping = False
 
@@ -95,6 +108,10 @@ good_luck = my_font.render("GOODLUCK!!!!!!!", True, (255, 255, 255))
 how_to_start_game = my_font.render("Click to begin", True, (255, 255, 255))
 intro_screen_showing = True
 
+#winning/losing code
+passed_first_level = my_font.render("Congrats! You passed the Jurassic Period!", True, (255, 255, 255))
+passed_first_level_part_two = my_font.render("Now lets see if you can pass the Triassic Period", True, (255, 255, 255))
+how_to_start_game = my_font.render("Click to begin", True, (255, 255, 255))
 
 #time display
 display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
@@ -154,25 +171,12 @@ while run:
 #collision code to see if player hits trex!!!!!!!!!!!
     if trex.rect.colliderect(dino.rect):
         end = True
-    # if pygame.sprite.spritecollide(dino, trex, True):
+        losing = True
+
+    # if total_time == 0.01:
     #     end = True
-
-    if 40.00 <= total_time <= 49.00:
-        first_ten_seconds_of_trex = random.randint(1, 8)
-
-    if 30.00 <= total_time <= 39.00:
-        second_ten_seconds_of_trex = random.randint(1, 9)
-
-    if 20.00 <= total_time <= 29.00:
-        third_ten_seconds_of_trex = random.randint(1, 9)
-
-    if 10.00 <= total_time <= 19.00:
-        fourth_ten_seconds_of_trex = random.randint(1, 9)
-
-    if 1.00 <= total_time <= 9.00:
-        fifth_ten_seconds_of_trex = random.randint(2, 8)
-
-
+    #     winning = True
+    #     end_first_background = True
 
 
 
@@ -180,6 +184,8 @@ while run:
 
         if event.type == pygame.QUIT:  # If user clicked close
             run = False
+
+        if event.type
     keys_pressed = pygame.key.get_pressed()
 
     if keys_pressed[pygame.K_SPACE]:
@@ -216,15 +222,16 @@ while run:
     if time_end == False:
         for i in range(1):
             current_time -= 1
-            total_time = round((start_time + 49) - current_time, 2)
+            total_time = round((start_time + 20) - current_time, 2)
     display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
 
 
     # when timer countdown ends, game is over condition
-    if total_time == 0:
+    if total_time == 0.01:
         end = True
         time_end = True
-
+        end_first_background = True
+        winning = True
 
 
 
@@ -249,33 +256,16 @@ while run:
         pygame.draw.rect(screen, (0, 0, 0), dino.rect, 2)
         pygame.draw.rect(screen, (0, 0, 0), trex.rect, 2)
 
-
-        if first_ten_seconds_of_trex == total_time:
-            screen.blit(trex.image, trex.rect)
-
-
-        if second_ten_seconds_of_trex == total_time:
-            screen.blit(trex.image, trex.rect)
-
-
-        if third_ten_seconds_of_trex == total_time:
-            screen.blit(trex.image, trex.rect)
-
-
-        if fourth_ten_seconds_of_trex == total_time:
-            screen.blit(trex.image, trex.rect)
-
-
-        if fifth_ten_seconds_of_trex == total_time:
-            screen.blit(trex.image, trex.rect)
-
-
-
-        # screen.blit(trex.image, trex.rect)
+        screen.blit(trex.image, trex.rect)
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         pygame.display.update()
-    if end == True:
+
+    if end == True and winning == True and end_first_background == True:
         screen.fill((r, b, g))
+        screen.blit(passed_first_level, (200, 200))
+        screen.blit(passed_first_level_part_two, (200, 300))
+        screen.blit(how_to_start_game, (200, 400))
+        pygame.display.update()
     frame += 1
 
 
