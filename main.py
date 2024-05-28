@@ -54,8 +54,10 @@ first_background = pygame.transform.scale(first_background, (800, 600))
 #IT WORKED!!!!!!!!!
 
 second_background = pygame.image.load("Desert_background.jfif")
-final_background = pygame.image.load("fire_background.jfif")
+second_background = pygame.transform.scale(second_background, (800, 600))
 
+final_background = pygame.image.load("fire_background.jfif")
+final_background = pygame.transform.scale(final_background, (800, 600))
 
 #starting variable for position
 dino_x_position = 100
@@ -81,7 +83,7 @@ jump_height = 20
 y_velocity = jump_height
 
 
-#defining time vcariables
+#defining time variables
 first_ten_seconds_of_trex = 0
 second_ten_seconds_of_trex = 0
 third_ten_seconds_of_trex = 0
@@ -119,6 +121,7 @@ display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (
 #boolean variables to decide when to switch backgrounds
 show_first_background = False
 end_first_background = False
+inbetween_for_first_and_second_backgrounds = False
 show_dino = False
 show_boulder = False
 
@@ -185,7 +188,16 @@ while run:
         if event.type == pygame.QUIT:  # If user clicked close
             run = False
 
-        if event.type
+        if event.type == pygame.MOUSEBUTTONUP and end == True:
+            # game is over variables set
+            end = False
+            losing = False
+            # clicks reset and rerednered
+            # time reset and rerendered
+            time_end = False
+            start_time = time.time()
+
+        # if event.type == PYGAME.M
     keys_pressed = pygame.key.get_pressed()
 
     if keys_pressed[pygame.K_SPACE]:
@@ -207,6 +219,10 @@ while run:
             intro_screen_showing = False
             show_first_background = True
 
+    if inbetween_for_first_and_second_backgrounds == True and event.type == pygame.MOUSEBUTTONUP:
+        inbetween_for_first_and_second_backgrounds = False
+        show_second_background = True
+
     if show_first_background == True:
         show_dino = True
         show_boulder = True
@@ -222,16 +238,17 @@ while run:
     if time_end == False:
         for i in range(1):
             current_time -= 1
-            total_time = round((start_time + 20) - current_time, 2)
+            total_time = round((start_time + 5) - current_time, 2)
     display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
 
 
     # when timer countdown ends, game is over condition
-    if total_time == 0.01:
+    if total_time == 0.01 and show_first_background == True:
         end = True
         time_end = True
         end_first_background = True
         winning = True
+        inbetween_for_first_and_second_backgrounds = True
 
 
 
@@ -246,6 +263,8 @@ while run:
         screen.blit(good_luck, (320, 500))
         screen.blit(how_to_start_game, (320, 560))
         pygame.display.update()
+
+
     if intro_screen_showing == False and show_first_background == True and end == False:
         screen.blit(first_background, (0, 0))
         screen.blit(display_time , (0, 0))
@@ -260,12 +279,22 @@ while run:
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         pygame.display.update()
 
-    if end == True and winning == True and end_first_background == True:
+    if end == True and winning == True and end_first_background == True and inbetween_for_first_and_second_backgrounds == True:
         screen.fill((r, b, g))
         screen.blit(passed_first_level, (200, 200))
         screen.blit(passed_first_level_part_two, (200, 300))
         screen.blit(how_to_start_game, (200, 400))
         pygame.display.update()
+
+
+    # inbetween_for_first_and_second_backgrounds == False and
+    if inbetween_for_first_and_second_backgrounds == False and show_second_background == True:
+        screen.blit(second_background, (0, 0))
+        screen.blit(display_time, (0, 0))
+        screen.blit(boulder.image, (boulder_start_x, boulder_y))
+        screen.blit(dino.image, dino.rect)
+        pygame.display.update()
+
     frame += 1
 
 
