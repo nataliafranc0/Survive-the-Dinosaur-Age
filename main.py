@@ -5,6 +5,7 @@ from dinosaur import Dinosaur
 from boulder import Boulder
 from cloud import Cloud
 from trex import Trex
+from bones import Bones
 
 
 print("Welcome to Survive the Dinosaur Age!")
@@ -41,6 +42,8 @@ cloud_start_x = 1234
 cloud_y = 50
 trex_start_x = 1000
 trex_start_y = 440
+bones_x = 790
+bones_y = 282
 
 
 r = 23
@@ -66,6 +69,7 @@ dino = Dinosaur(dino_x_position, dino_y_position)
 boulder = Boulder(750, 200)
 cloud = Cloud(850, 50)
 trex = Trex(1000, 440)
+bones = Bones(750, 200)
 # trex.rescale_image("trex.png")
 
 # trex_center = trex.get_rect().center
@@ -122,6 +126,7 @@ display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (
 show_first_background = False
 end_first_background = False
 inbetween_for_first_and_second_backgrounds = False
+inbetween_for_second_and_third_background = False
 show_dino = False
 show_boulder = False
 
@@ -143,12 +148,12 @@ while run:
 
 #boulder moving code
     if frame % 1 == 0:
-        boulder_start_x = boulder_start_x - 5
-        boulder.move_boulder(boulder_start_x, boulder_y)
+        bones_x = bones_x - 5
+        bones.move_bones(bones_x, bones_y)
 
-    if boulder_start_x == -200:
-        boulder_start_x = 750
-        boulder.move_boulder(boulder_start_x, boulder_y)
+    if bones_x == -200:
+        bones_x = 750
+        bones.move_bones(bones_x, bones_y)
 
 
 #cloud moving code
@@ -159,6 +164,15 @@ while run:
     if cloud_start_x <= -200:
         cloud_start_x = 700
         cloud.move_cloud(cloud_start_x, cloud_y)
+
+#bones code
+    if frame % 1 == 0:
+        boulder_start_x = boulder_start_x - 5
+        boulder.move_boulder(boulder_start_x, boulder_y)
+
+    if boulder_start_x == -200:
+        boulder_start_x = 750
+        boulder.move_boulder(boulder_start_x, boulder_y)
 
 
 #trex moving code + keeping track if player hits dino
@@ -246,10 +260,25 @@ while run:
     if total_time == 0.01 and show_first_background == True:
         end = True
         time_end = True
+        show_first_background = False
         end_first_background = True
         winning = True
+
+    if end and time_end and end_first_background and winning and show_first_background == False:
         inbetween_for_first_and_second_backgrounds = True
 
+    # if end == True and end_first_background == True and winning == True:
+    #     inbetween_for_first_and_second_backgrounds ==  True
+
+    if total_time == 0.01 and show_second_background == True:
+        end = True
+        time_end = True
+        show_second_background = False
+        end_second_background = True
+        winning = True
+
+    if end and time_end and winning and end_second_background and show_second_background == False:
+        inbetween_for_second_and_third_background = True
 
 
     #blit zone!
@@ -267,7 +296,7 @@ while run:
 
     if intro_screen_showing == False and show_first_background == True and end == False:
         screen.blit(first_background, (0, 0))
-        screen.blit(display_time , (0, 0))
+        screen.blit(display_time, (0, 0))
         screen.blit(boulder.image, (boulder_start_x, boulder_y))
         screen.blit(dino.image, dino.rect)
 
@@ -279,7 +308,8 @@ while run:
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         pygame.display.update()
 
-    if end == True and winning == True and end_first_background == True and inbetween_for_first_and_second_backgrounds == True:
+    if  inbetween_for_first_and_second_backgrounds == True:
+
         screen.fill((r, b, g))
         screen.blit(passed_first_level, (200, 200))
         screen.blit(passed_first_level_part_two, (200, 300))
@@ -291,9 +321,12 @@ while run:
     if inbetween_for_first_and_second_backgrounds == False and show_second_background == True:
         screen.blit(second_background, (0, 0))
         screen.blit(display_time, (0, 0))
-        screen.blit(boulder.image, (boulder_start_x, boulder_y))
+        screen.blit(bones.image, (bones_x, bones_y))
+        screen.blit(cloud.image, (cloud_start_x, cloud_y))
         screen.blit(dino.image, dino.rect)
         pygame.display.update()
+
+
 
     frame += 1
 
