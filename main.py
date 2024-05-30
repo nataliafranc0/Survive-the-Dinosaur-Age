@@ -6,6 +6,7 @@ from boulder import Boulder
 from cloud import Cloud
 from trex import Trex
 from bones import Bones
+from velociraptor import Velociraptor
 
 
 print("Welcome to Survive the Dinosaur Age!")
@@ -17,41 +18,58 @@ pygame.font.init()
 my_font = pygame.font.SysFont('Arial', 20)
 welcome_font = pygame.font.SysFont('Comfortaa', 40)
 
+
+#tiem variables
 start_time = time.time()
 start_time = float(start_time)
-
 current_time = start_time
 time_end = False
 end = False
 total_time = 0
 
 
-
+#winning/losing status
 winning = False
 losing = False
-
 
 
 # set up variables for the display
 size = (800, 600)
 screen = pygame.display.set_mode(size)
-dino_start_x = 580
+
+#X AND Y POSITIONS
+#dino x and y!
+dino_x_position = 100
+dino_y_position = 384
+
+#boulder x and y positions
 boulder_start_x = 750
 boulder_y = 282
+
+#cloud x and y
 cloud_start_x = 1234
 cloud_y = 50
+
+#trex x and y
 trex_start_x = 1000
 trex_start_y = 440
-bones_x = 790
-bones_y = 282
+
+#bones x and y
+bones_x = 850
+bones_y = 345
+
+#raptor x and y
+raptor_x = 900
+raptor_y = 420
 
 
+#colors!
 r = 23
 b = 47
 g = 132
 
-# boulder = pygame.image.load("boulder-removebg-preview.png")
 
+#backgrounds and resizing them
 first_background = pygame.image.load("daytime_background.jfif")
 first_background = pygame.transform.scale(first_background, (800, 600))
 #IT WORKED!!!!!!!!!
@@ -62,45 +80,21 @@ second_background = pygame.transform.scale(second_background, (800, 600))
 final_background = pygame.image.load("fire_background.jfif")
 final_background = pygame.transform.scale(final_background, (800, 600))
 
-#starting variable for position
-dino_x_position = 100
-dino_y_position = 384
+
+
+#starting variable for position creating under class
 dino = Dinosaur(dino_x_position, dino_y_position)
 boulder = Boulder(750, 200)
 cloud = Cloud(850, 50)
 trex = Trex(1000, 440)
 bones = Bones(750, 200)
-# trex.rescale_image("trex.png")
+raptor = Velociraptor(raptor_x, raptor_y)
 
-# trex_center = trex.get_rect().center
-# scaled_image = pygame.transform.scale_by(trex, 2)
-# screen.blit(scaled_image, scaled_image.get_rect(center=trex))
-#
-# pygame.Rect.scale_by
 
-# rexy = pygame.sprite.Group(trex)
-
-# dino_rect = dino.rect(center=(dino_x_position, dino_y_position))
-
+#physics for jumping (variables)
 y_gravity = 1
 jump_height = 20
 y_velocity = jump_height
-
-
-#defining time variables
-first_ten_seconds_of_trex = 0
-second_ten_seconds_of_trex = 0
-third_ten_seconds_of_trex = 0
-fourth_ten_seconds_of_trex = 0
-fifth_ten_seconds_of_trex = 0
-
-first_chosen_time = 0
-second_chosen_time = 0
-third_chosen_time = 0
-fourth_chosen_time = 0
-fifth_chosen_time = 0
-
-
 jumping = False
 
 
@@ -114,32 +108,36 @@ good_luck = my_font.render("GOODLUCK!!!!!!!", True, (255, 255, 255))
 how_to_start_game = my_font.render("Click to begin", True, (255, 255, 255))
 intro_screen_showing = True
 
+
 #winning/losing code
 passed_first_level = my_font.render("Congrats! You passed the Jurassic Period!", True, (255, 255, 255))
 passed_first_level_part_two = my_font.render("Now lets see if you can pass the Triassic Period", True, (255, 255, 255))
 how_to_start_game = my_font.render("Click to begin", True, (255, 255, 255))
 
+
 #time display
 display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
+
 
 #boolean variables to decide when to switch backgrounds
 show_first_background = False
 end_first_background = False
 inbetween_for_first_and_second_backgrounds = False
-inbetween_for_second_and_third_background = False
-show_dino = False
-show_boulder = False
 
 show_second_background = False
 end_second_background = False
+inbetween_for_second_and_third_background = False
 
 show_final_background = False
 end_final_background = False
+
+
 
 run = True
 #begin running code
 
 # -------- Main Program Loop -----------
+#starting clock for timer
 clock = pygame.time.Clock()
 frame = 0
 while run:
@@ -185,10 +183,24 @@ while run:
         trex_start_x = 850
         trex.move_trex(trex_start_x, trex_start_y)
 
+#raptor moving code
+    if frame % 1 == 0:
+        raptor_x = raptor_x - 9
+        raptor.move_velociraptor(raptor_x, raptor_y)
+
+    if raptor_x <= -200:
+        raptor_x = 930
+        raptor.move_velociraptor(raptor_x, raptor_y)
+
 #collision code to see if player hits trex!!!!!!!!!!!
     if trex.rect.colliderect(dino.rect):
         end = True
         losing = True
+
+    if raptor.rect.colliderect(dino.rect) and show_second_background == True:
+        end = True
+        losing = True
+
 
     # if total_time == 0.01:
     #     end = True
@@ -237,11 +249,6 @@ while run:
         inbetween_for_first_and_second_backgrounds = False
         show_second_background = True
 
-    if show_first_background == True:
-        show_dino = True
-        show_boulder = True
-
-
 
 # timer used to move bomb spontaneously
     timer_ongoing = round(current_time - start_time, 2)
@@ -257,7 +264,7 @@ while run:
 
 
     # when timer countdown ends, game is over condition
-    if total_time == 0.01 and show_first_background == True:
+    if total_time <= 0 and show_first_background == True:
         end = True
         time_end = True
         show_first_background = False
@@ -270,7 +277,7 @@ while run:
     # if end == True and end_first_background == True and winning == True:
     #     inbetween_for_first_and_second_backgrounds ==  True
 
-    if total_time == 0.01 and show_second_background == True:
+    if total_time <= 0 and show_second_background == True:
         end = True
         time_end = True
         show_second_background = False
@@ -316,12 +323,18 @@ while run:
         screen.blit(how_to_start_game, (200, 400))
         pygame.display.update()
 
-
     # inbetween_for_first_and_second_backgrounds == False and
-    if inbetween_for_first_and_second_backgrounds == False and show_second_background == True:
+    # inbetween_for_first_and_second_backgrounds == False and
+
+    if show_second_background == True and end == False:
         screen.blit(second_background, (0, 0))
         screen.blit(display_time, (0, 0))
         screen.blit(bones.image, (bones_x, bones_y))
+        screen.blit(raptor.image, (raptor.rect))
+
+        pygame.draw.rect(screen, (0, 0, 0), dino.rect, 2)
+        pygame.draw.rect(screen, (0, 0, 0), raptor.rect, 2)
+
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         screen.blit(dino.image, dino.rect)
         pygame.display.update()
