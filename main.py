@@ -7,6 +7,8 @@ from cloud import Cloud
 from trex import Trex
 from bones import Bones
 from velociraptor import Velociraptor
+from meteor import Meteor
+from comet import Comet
 
 
 print("Welcome to Survive the Dinosaur Age!")
@@ -62,6 +64,14 @@ bones_y = 345
 raptor_x = 900
 raptor_y = 420
 
+#meteor x and y
+meteor_x = 900
+meteor_y = 700
+
+#comet x and y
+comet_x = 900
+comet_y = 680
+
 
 #colors!
 r = 23
@@ -89,6 +99,8 @@ cloud = Cloud(850, 50)
 trex = Trex(1000, 440)
 bones = Bones(750, 200)
 raptor = Velociraptor(raptor_x, raptor_y)
+comet = Comet(comet_x, comet_y)
+meteor = Meteor (meteor_x, meteor_y)
 
 
 #physics for jumping (variables)
@@ -97,23 +109,35 @@ jump_height = 20
 y_velocity = jump_height
 jumping = False
 
+#display statements for the whole code
 
 #introduction window code
 welcome = my_font.render("Welcome to Survive the Dinosaur Age!", True, (255, 255, 255))
 instructions = my_font.render("During this game, you will need to dodge obstacles and complete each Dinosaur period to survive!", True, (255, 255, 255))
 obstacles = my_font.render("There will be a moving boulder which will not hurt to touch. However there will be a tiny T-Rex which you have to dodge. If you touch it, you will start back at the beginning.", True, (255, 255, 255))
 obstacles_part_two = my_font.render("dodge. If you touch it, you will start back at the beginning.", True, (255, 255, 255))
+if_you_fail = my_font.render("Click the screen if you run into the trex and fail the level to restart", True, (255, 255, 255))
 how_to_win = my_font.render("Once you pass the Triassic, Jurassic, and Cretaceous Periods, you win!", True, (255, 255, 255))
 good_luck = my_font.render("GOODLUCK!!!!!!!", True, (255, 255, 255))
 how_to_start_game = my_font.render("Click to begin", True, (255, 255, 255))
 intro_screen_showing = True
 
 
-#winning/losing code
+#passing first level/Jurassic level
 passed_first_level = my_font.render("Congrats! You passed the Jurassic Period!", True, (255, 255, 255))
 passed_first_level_part_two = my_font.render("Now lets see if you can pass the Triassic Period", True, (255, 255, 255))
+new_obstacle = my_font.render("This time its a velociraptor and it's quicker than the trex!", True, (255, 255, 255))
+bones_not_a_threat = my_font.render("The bones in the background are safe like the boulder.", True, (255, 255, 255))
 how_to_start_game = my_font.render("Click to begin", True, (255, 255, 255))
 
+
+#passing second level/Triassic level
+passed_second_level = my_font.render("Congrats you passed the Triassic level!", True, (255, 255, 255))
+passed_second_level_part_two = my_font.render("Now lets see if you can pass the Cretaceous Period", True, (255, 255, 255))
+final_level_message = my_font.render("The final level", True, (255, 255, 255))
+more_new_obstacles = my_font.render("This time there are 2 obstacles: meteors!", True, (255, 255, 255))
+survive = my_font.render("Make sure your species survives!!", True, (255, 255, 255))
+how_to_start_game = my_font.render("Click to begin", True, (255, 255, 255))
 
 #time display
 display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
@@ -127,9 +151,15 @@ inbetween_for_first_and_second_backgrounds = False
 show_second_background = False
 end_second_background = False
 inbetween_for_second_and_third_background = False
+switch_to_last_middle_page = False
 
 show_final_background = False
 end_final_background = False
+winning_page = False
+
+
+
+
 
 
 
@@ -176,37 +206,55 @@ while run:
 #trex moving code + keeping track if player hits dino
 
     if frame % 1 == 0:
-        trex_start_x = trex_start_x - 9
+        trex_start_x = trex_start_x - 8
         trex.move_trex(trex_start_x, trex_start_y)
 
     if trex_start_x <= -200:
-        trex_start_x = 850
+        trex_start_x = 920
         trex.move_trex(trex_start_x, trex_start_y)
 
 #raptor moving code
     if frame % 1 == 0:
-        raptor_x = raptor_x - 9
+        raptor_x = raptor_x - 11
         raptor.move_velociraptor(raptor_x, raptor_y)
 
     if raptor_x <= -200:
-        raptor_x = 930
+        raptor_x = 850
         raptor.move_velociraptor(raptor_x, raptor_y)
 
+#code for meteor movement on final stage!
+    if frame % 1 == 0:
+        meteor_x = meteor_x - 11
+        meteor.move_meteor(meteor_x, meteor_y)
+
+    if meteor_x <= -200:
+        meteor_x = 900
+        meteor.move_meteor(meteor_x, meteor_y)
+
+#code for comet moevment on third level
+    if frame % 1 == 0:
+        comet_x = comet_x - 14
+        comet.move_comet(comet_x, comet_y)
+
+    if comet_x <= -200:
+        comet_x = 900
+        comet.move_comet(comet_x, comet_y)
+
+
+
 #collision code to see if player hits trex!!!!!!!!!!!
-    if trex.rect.colliderect(dino.rect):
+    if trex.rect.colliderect(dino.rect) and show_first_background == True:
         end = True
         losing = True
 
+    # and show_second_background == True
     if raptor.rect.colliderect(dino.rect) and show_second_background == True:
         end = True
         losing = True
 
-
-    # if total_time == 0.01:
-    #     end = True
-    #     winning = True
-    #     end_first_background = True
-
+    if (meteor.rect.colliderect(dino.rect)) or (comet.rect.colliderect(dino.rect)) and show_final_background == True:
+        end = True
+        losing = True
 
 
     for event in pygame.event.get():  # User did something
@@ -241,16 +289,27 @@ while run:
 
 
 #bakcground code to decide on background
-    if intro_screen_showing == True and event.type == pygame.MOUSEBUTTONUP:
-            intro_screen_showing = False
-            show_first_background = True
+    #showing first level
+    if intro_screen_showing == True and event.type  == pygame.MOUSEBUTTONUP:
+        intro_screen_showing = False
+        show_first_background = True
+        start_time = time.time()
 
+    #showing second level
     if inbetween_for_first_and_second_backgrounds == True and event.type == pygame.MOUSEBUTTONUP:
         inbetween_for_first_and_second_backgrounds = False
         show_second_background = True
+        start_time = time.time()
+
+    #showing final background
+    if switch_to_last_middle_page == True and event.type == pygame.MOUSEBUTTONUP:
+        switch_to_last_middle_page= False
+        show_final_background = True
+        start_time = time.time()
 
 
-# timer used to move bomb spontaneously
+
+# timer
     timer_ongoing = round(current_time - start_time, 2)
 
 # creating timer countdown
@@ -263,6 +322,7 @@ while run:
     display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
 
 
+#code for when you pass first level
     # when timer countdown ends, game is over condition
     if total_time <= 0 and show_first_background == True:
         end = True
@@ -271,12 +331,13 @@ while run:
         end_first_background = True
         winning = True
 
+
+#code for when you pass the first level, shows you the instructions for the next level
     if end and time_end and end_first_background and winning and show_first_background == False:
         inbetween_for_first_and_second_backgrounds = True
 
-    # if end == True and end_first_background == True and winning == True:
-    #     inbetween_for_first_and_second_backgrounds ==  True
 
+#code for when you win the second level
     if total_time <= 0 and show_second_background == True:
         end = True
         time_end = True
@@ -284,8 +345,29 @@ while run:
         end_second_background = True
         winning = True
 
-    if end and time_end and winning and end_second_background and show_second_background == False:
+
+#code to show instructins for final level, middle page between second and final level
+    if end and time_end and end_second_background and winning and show_second_background == False:
         inbetween_for_second_and_third_background = True
+        inbetween_for_first_and_second_backgrounds = False
+
+    if inbetween_for_second_and_third_background and inbetween_for_first_and_second_backgrounds == False:
+        switch_to_last_middle_page = True
+
+
+
+
+# code for winning the final level
+    if total_time <= 0 and show_final_background == True:
+        end = True
+        time_end = True
+        show_second_background = False
+        end_second_background = True
+        winning = True
+
+    if end_final_background and end and time_end and winning and show_final_background == False:
+        inbetween_for_second_and_third_background = False
+        winning_page = True
 
 
     #blit zone!
@@ -295,9 +377,10 @@ while run:
         screen.blit(instructions, (50, 200))
         screen.blit(obstacles, (00, 280))
         screen.blit(obstacles_part_two, (200, 368))
-        screen.blit(how_to_win, (150, 440))
-        screen.blit(good_luck, (320, 500))
-        screen.blit(how_to_start_game, (320, 560))
+        screen.blit(if_you_fail, (200, 440))
+        screen.blit(how_to_win, (150, 500))
+        screen.blit(good_luck, (320, 560))
+        screen.blit(how_to_start_game, (320, 630 ))
         pygame.display.update()
 
 
@@ -315,16 +398,16 @@ while run:
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         pygame.display.update()
 
-    if  inbetween_for_first_and_second_backgrounds == True:
+    if inbetween_for_first_and_second_backgrounds == True:
 
         screen.fill((r, b, g))
         screen.blit(passed_first_level, (200, 200))
         screen.blit(passed_first_level_part_two, (200, 300))
-        screen.blit(how_to_start_game, (200, 400))
+        screen.blit(new_obstacle, (200, 400))
+        screen.blit(bones_not_a_threat, (200, 500))
+        screen.blit(how_to_start_game, (200, 600))
         pygame.display.update()
 
-    # inbetween_for_first_and_second_backgrounds == False and
-    # inbetween_for_first_and_second_backgrounds == False and
 
     if show_second_background == True and end == False:
         screen.blit(second_background, (0, 0))
@@ -334,6 +417,31 @@ while run:
 
         pygame.draw.rect(screen, (0, 0, 0), dino.rect, 2)
         pygame.draw.rect(screen, (0, 0, 0), raptor.rect, 2)
+
+        screen.blit(cloud.image, (cloud_start_x, cloud_y))
+        screen.blit(dino.image, dino.rect)
+        pygame.display.update()
+
+    if switch_to_last_middle_page == True:
+        screen.fill((r, b, g))
+        screen.blit(passed_second_level, (200, 200))
+        screen.blit(passed_second_level_part_two, (200,300))
+        screen.blit(final_level_message, (200, 400))
+        screen.blit(more_new_obstacles, (200, 500))
+        screen.blit(survive, (200, 600))
+        screen.blit(how_to_start_game, (200,700))
+        pygame.display.update()
+
+    if show_final_background == True and end == False and switch_to_last_middle_page == False:
+        screen.blit(final_background, (0, 0))
+        screen.blit(display_time, (0, 0))
+        screen.blit(bones.image, (bones_x, bones_y))
+        screen.blit(comet.image, (comet.rect))
+        screen.blit(meteor.image, (meteor.rect))
+
+        pygame.draw.rect(screen, (0, 0, 0), dino.rect, 2)
+        pygame.draw.rect(screen, (0, 0, 0), comet.rect, 2)
+        pygame.draw.rect(screen, (0, 0, 0), meteor.rect, 2)
 
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         screen.blit(dino.image, dino.rect)
