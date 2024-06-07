@@ -100,7 +100,7 @@ trex = Trex(1000, 440)
 bones = Bones(750, 200)
 raptor = Velociraptor(raptor_x, raptor_y)
 comet = Comet(comet_x, comet_y)
-meteor = Meteor (meteor_x, meteor_y)
+meteor = Meteor(meteor_x, meteor_y)
 
 
 #physics for jumping (variables)
@@ -138,6 +138,11 @@ final_level_message = my_font.render("The final level", True, (255, 255, 255))
 more_new_obstacles = my_font.render("This time there are 2 obstacles: meteors!", True, (255, 255, 255))
 survive = my_font.render("Make sure your species survives!!", True, (255, 255, 255))
 how_to_start_game = my_font.render("Click to begin", True, (255, 255, 255))
+
+
+#passing last level/ winning page
+congrats = my_font.render("CONRATS!!!!!!!!!!!", True, (255, 255, 255))
+
 
 #time display
 display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
@@ -304,6 +309,8 @@ while run:
     #showing final background
     if switch_to_last_middle_page == True and event.type == pygame.MOUSEBUTTONUP:
         switch_to_last_middle_page= False
+        show_second_background = False
+        end_second_background = True
         show_final_background = True
         start_time = time.time()
 
@@ -318,7 +325,7 @@ while run:
     if time_end == False:
         for i in range(1):
             current_time -= 1
-            total_time = round((start_time + 5) - current_time, 2)
+            total_time = round((start_time + 2) - current_time, 2)
     display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
 
 
@@ -348,26 +355,23 @@ while run:
 
 #code to show instructins for final level, middle page between second and final level
     if end and time_end and end_second_background and winning and show_second_background == False:
-        inbetween_for_second_and_third_background = True
-        inbetween_for_first_and_second_backgrounds = False
-
-    if inbetween_for_second_and_third_background and inbetween_for_first_and_second_backgrounds == False:
         switch_to_last_middle_page = True
-
-
+        inbetween_for_first_and_second_backgrounds = False
 
 
 # code for winning the final level
     if total_time <= 0 and show_final_background == True:
         end = True
         time_end = True
-        show_second_background = False
-        end_second_background = True
+        show_final_background = False
+        end_final_background = True
+        switch_to_last_middle_page = False
         winning = True
-
-    if end_final_background and end and time_end and winning and show_final_background == False:
-        inbetween_for_second_and_third_background = False
         winning_page = True
+
+    # if end_final_background and end and time_end and winning and show_final_background == False:
+    #     switch_to_last_middle_page = False
+    #     winning_page = True
 
 
     #blit zone!
@@ -432,19 +436,29 @@ while run:
         screen.blit(how_to_start_game, (200,700))
         pygame.display.update()
 
-    if show_final_background == True and end == False and switch_to_last_middle_page == False:
+    if show_final_background == True and switch_to_last_middle_page == False:
         screen.blit(final_background, (0, 0))
         screen.blit(display_time, (0, 0))
         screen.blit(bones.image, (bones_x, bones_y))
-        screen.blit(comet.image, (comet.rect))
-        screen.blit(meteor.image, (meteor.rect))
+
 
         pygame.draw.rect(screen, (0, 0, 0), dino.rect, 2)
-        pygame.draw.rect(screen, (0, 0, 0), comet.rect, 2)
-        pygame.draw.rect(screen, (0, 0, 0), meteor.rect, 2)
+        # pygame.draw.rect(screen, (0, 0, 0), comet.rect, 2)
+        # pygame.draw.rect(screen, (0, 0, 0), meteor.rect, 2)
 
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         screen.blit(dino.image, dino.rect)
+        screen.blit(comet.image, comet.rect)
+        screen.blit(meteor.image, meteor.rect)
+        if screen.blit(meteor.image, meteor.rect) == True and screen.blit(comet.image, comet.rect) == True:
+            print("yes")
+
+        pygame.display.update()
+
+
+    if winning_page == True and end == True and switch_to_last_middle_page == False:
+        screen.blit(final_background, (0, 0))
+        screen.blit(congrats, (200, 300))
         pygame.display.update()
 
 
