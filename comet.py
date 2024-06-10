@@ -4,7 +4,7 @@ class Comet:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.image = ["comet.png"]
+        self.image = ["comet-removebg-preview.png"]
         self.image = pygame.image.load(self.image[0])
         # self.rescale_image(self.image)
         self.image_size = self.image.get_size()

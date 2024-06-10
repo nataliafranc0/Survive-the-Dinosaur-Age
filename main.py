@@ -66,11 +66,11 @@ raptor_y = 420
 
 #meteor x and y
 meteor_x = 900
-meteor_y = 700
+meteor_y = 445
 
 #comet x and y
 comet_x = 900
-comet_y = 680
+comet_y = 420
 
 
 #colors!
@@ -163,11 +163,6 @@ end_final_background = False
 winning_page = False
 
 
-
-
-
-
-
 run = True
 #begin running code
 
@@ -228,20 +223,20 @@ while run:
         raptor.move_velociraptor(raptor_x, raptor_y)
 
 #code for meteor movement on final stage!
-    if frame % 1 == 0:
+    if frame % 1 == 0  and show_final_background:
         meteor_x = meteor_x - 11
         meteor.move_meteor(meteor_x, meteor_y)
 
-    if meteor_x <= -200:
+    if meteor_x <= -200  and show_final_background:
         meteor_x = 900
         meteor.move_meteor(meteor_x, meteor_y)
 
 #code for comet moevment on third level
-    if frame % 1 == 0:
-        comet_x = comet_x - 14
+    if frame % 1 == 0 and show_final_background:
+        comet_x = comet_x - 10.7
         comet.move_comet(comet_x, comet_y)
 
-    if comet_x <= -200:
+    if comet_x <= -200 and show_final_background:
         comet_x = 900
         comet.move_comet(comet_x, comet_y)
 
@@ -257,7 +252,7 @@ while run:
         end = True
         losing = True
 
-    if (meteor.rect.colliderect(dino.rect)) or (comet.rect.colliderect(dino.rect)) and show_final_background == True:
+    if (meteor.rect.colliderect(dino.rect)) or (comet.rect.colliderect(dino.rect)):
         end = True
         losing = True
 
@@ -325,7 +320,7 @@ while run:
     if time_end == False:
         for i in range(1):
             current_time -= 1
-            total_time = round((start_time + 2) - current_time, 2)
+            total_time = round((start_time + 10) - current_time, 2)
     display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
 
 
@@ -436,7 +431,7 @@ while run:
         screen.blit(how_to_start_game, (200,700))
         pygame.display.update()
 
-    if show_final_background == True and switch_to_last_middle_page == False:
+    if show_final_background == True and switch_to_last_middle_page == False and end == False:
         screen.blit(final_background, (0, 0))
         screen.blit(display_time, (0, 0))
         screen.blit(bones.image, (bones_x, bones_y))
@@ -450,14 +445,12 @@ while run:
         screen.blit(dino.image, dino.rect)
         screen.blit(comet.image, comet.rect)
         screen.blit(meteor.image, meteor.rect)
-        if screen.blit(meteor.image, meteor.rect) == True and screen.blit(comet.image, comet.rect) == True:
-            print("yes")
 
         pygame.display.update()
 
 
-    if winning_page == True and end == True and switch_to_last_middle_page == False:
-        screen.blit(final_background, (0, 0))
+    if  winning and winning_page == True and end == True and switch_to_last_middle_page == False:
+        screen.fill((r, b, g))
         screen.blit(congrats, (200, 300))
         pygame.display.update()
 
