@@ -162,6 +162,9 @@ show_final_background = False
 end_final_background = False
 winning_page = False
 
+#sound
+winning_sound_effect = pygame.mixer.Sound("cheering-and-clapping-crowd-1-5995.mp3")
+
 
 run = True
 #begin running code
@@ -233,7 +236,7 @@ while run:
 
 #code for comet moevment on third level
     if frame % 1 == 0 and show_final_background:
-        comet_x = comet_x - 10.7
+        comet_x = comet_x - 10.9
         comet.move_comet(comet_x, comet_y)
 
     if comet_x <= -200 and show_final_background:
@@ -268,6 +271,28 @@ while run:
             losing = False
             # clicks reset and rerednered
             # time reset and rerendered
+            #reset position of obstacles
+            # trex x and y
+            trex_start_x = 1000
+            trex_start_y = 440
+
+            # raptor x and y
+            raptor_x = 900
+            raptor_y = 420
+
+            # meteor x and y
+            meteor_x = 900
+            meteor_y = 445
+
+            # comet x and y
+            comet_x = 900
+            comet_y = 420
+
+            trex.move_trex(trex_start_x, trex_start_y)
+            raptor.move_velociraptor(raptor_x, raptor_y)
+            comet.move_comet(comet_x, comet_y)
+            meteor.move_meteor(meteor_x, meteor_y)
+
             time_end = False
             start_time = time.time()
 
@@ -320,7 +345,7 @@ while run:
     if time_end == False:
         for i in range(1):
             current_time -= 1
-            total_time = round((start_time + 10) - current_time, 2)
+            total_time = round((start_time + 2) - current_time, 2)
     display_time = my_font.render("Time Elapsed: " + str(float(total_time)), True, (255, 255, 255))
 
 
@@ -362,11 +387,14 @@ while run:
         end_final_background = True
         switch_to_last_middle_page = False
         winning = True
+
+
+    if end and time_end and end_final_background and winning and switch_to_last_middle_page == False and show_final_background == False:
         winning_page = True
 
-    # if end_final_background and end and time_end and winning and show_final_background == False:
-    #     switch_to_last_middle_page = False
-    #     winning_page = True
+
+    if winning_page == True:
+        switch_to_last_middle_page = False
 
 
     #blit zone!
@@ -405,6 +433,7 @@ while run:
         screen.blit(new_obstacle, (200, 400))
         screen.blit(bones_not_a_threat, (200, 500))
         screen.blit(how_to_start_game, (200, 600))
+        winning_sound_effect.play()
         pygame.display.update()
 
 
@@ -419,6 +448,8 @@ while run:
 
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         screen.blit(dino.image, dino.rect)
+        sound.stop()
+
         pygame.display.update()
 
     if switch_to_last_middle_page == True:
@@ -429,6 +460,7 @@ while run:
         screen.blit(more_new_obstacles, (200, 500))
         screen.blit(survive, (200, 600))
         screen.blit(how_to_start_game, (200,700))
+        winning_sound_effect.play()
         pygame.display.update()
 
     if show_final_background == True and switch_to_last_middle_page == False and end == False:
@@ -449,10 +481,13 @@ while run:
         pygame.display.update()
 
 
-    if  winning and winning_page == True and end == True and switch_to_last_middle_page == False:
+    if winning_page:
         screen.fill((r, b, g))
         screen.blit(congrats, (200, 300))
+        winning_sound_effect.play()
         pygame.display.update()
+
+
 
 
 
