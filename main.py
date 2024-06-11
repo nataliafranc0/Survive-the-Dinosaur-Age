@@ -416,11 +416,9 @@ while run:
         screen.blit(display_time, (0, 0))
         screen.blit(boulder.image, (boulder_start_x, boulder_y))
         screen.blit(dino.image, dino.rect)
-
-        # drawing the outline of the rectangle
-        pygame.draw.rect(screen, (0, 0, 0), dino.rect, 2)
-        pygame.draw.rect(screen, (0, 0, 0), trex.rect, 2)
-
+        # # drawing the outline of the rectangle
+        # pygame.draw.rect(screen, (0, 0, 0), dino.rect, 2)
+        # pygame.draw.rect(screen, (0, 0, 0), trex.rect, 2)
         screen.blit(trex.image, trex.rect)
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         pygame.display.update()
@@ -433,7 +431,6 @@ while run:
         screen.blit(new_obstacle, (200, 400))
         screen.blit(bones_not_a_threat, (200, 500))
         screen.blit(how_to_start_game, (200, 600))
-        winning_sound_effect.play()
         pygame.display.update()
 
 
@@ -442,13 +439,9 @@ while run:
         screen.blit(display_time, (0, 0))
         screen.blit(bones.image, (bones_x, bones_y))
         screen.blit(raptor.image, (raptor.rect))
-
-        pygame.draw.rect(screen, (0, 0, 0), dino.rect, 2)
-        pygame.draw.rect(screen, (0, 0, 0), raptor.rect, 2)
-
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         screen.blit(dino.image, dino.rect)
-        sound.stop()
+
 
         pygame.display.update()
 
@@ -460,19 +453,12 @@ while run:
         screen.blit(more_new_obstacles, (200, 500))
         screen.blit(survive, (200, 600))
         screen.blit(how_to_start_game, (200,700))
-        winning_sound_effect.play()
         pygame.display.update()
 
     if show_final_background == True and switch_to_last_middle_page == False and end == False:
         screen.blit(final_background, (0, 0))
         screen.blit(display_time, (0, 0))
         screen.blit(bones.image, (bones_x, bones_y))
-
-
-        pygame.draw.rect(screen, (0, 0, 0), dino.rect, 2)
-        # pygame.draw.rect(screen, (0, 0, 0), comet.rect, 2)
-        # pygame.draw.rect(screen, (0, 0, 0), meteor.rect, 2)
-
         screen.blit(cloud.image, (cloud_start_x, cloud_y))
         screen.blit(dino.image, dino.rect)
         screen.blit(comet.image, comet.rect)
@@ -485,6 +471,8 @@ while run:
         screen.fill((r, b, g))
         screen.blit(congrats, (200, 300))
         winning_sound_effect.play()
+        if winning_sound_effect.play() == True:
+            print("hello")
         pygame.display.update()
 
 
